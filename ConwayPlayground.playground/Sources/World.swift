@@ -33,45 +33,42 @@ public struct World: Grid {
     public init(_ dimensions: (height: Int, width: Int)) {
         
         self.worldSize = dimensions
-        
-        world = World.seedWorld(dimensions)
+        self.world = Array(repeating: Array(repeating: Cell.dead, count: dimensions.height), count: dimensions.width)
     }
     
-    private static func seedWorld(_ dimensions: (height: Int, width: Int)) -> [[Cell]] {
+    public mutating func seed() {
+
+        world[4][4] = Cell.alive
+        world[4][5] = Cell.alive
+        world[4][6] = Cell.alive
         
-        var world = Array(repeating: Array(repeating: Cell.dead, count: dimensions.height), count: dimensions.width)
+        world[3][5] = Cell.alive
+        world[5][5] = Cell.alive
         
-        for i in 0..<dimensions.height {
-            
-            for j in 0..<dimensions.width {
-                
-                world[i][j] = arc4random_uniform(20) == 0 ? Cell.alive : Cell.dead
-            }
-        }
-        
-        return world
-    }
-    
-    public func surroundingElements() -> [Cell] {
-        
-        return [Cell.alive]
-    }
-    
-    public func item(at position: GridPosition) -> Cell? {
-        return nil
+//        for x in 0..<worldSize.width {
+//
+//            for y in 0..<worldSize.height {
+//
+//                world[x][y] = arc4random_uniform(20) == 0 ? Cell.alive : Cell.dead
+//            }
+//        }
     }
     
     public func cell(at index: (x: Int, y: Int)) -> Cell {
         return world[index.x][index.y]
     }
     
+    mutating public func setCell(_ cell: Cell, at index: (x: Int, y: Int)) {
+        world[index.x][index.y] = cell
+    }
+    
     public func description() -> String {
         
         var descriptionString = ""
         
-        for i in 0..<worldSize.height {
-            for j in 0..<worldSize.width {
-                descriptionString += world[i][j].description
+        for x in 0..<worldSize.width {
+            for y in 0..<worldSize.height {
+                descriptionString += world[x][y].description
             }
             descriptionString += "\n"
         }
