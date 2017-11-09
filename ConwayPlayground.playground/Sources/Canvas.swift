@@ -32,7 +32,7 @@ public class Canvas: UIView {
         drawSimulation(in: context, with: CGSize(width: incrementX, height: incrementY))
         
         context.setLineWidth(1.0)
-        context.setStrokeColor(UIColor.black.cgColor)
+        context.setStrokeColor(UIColor.darkGray.cgColor)
         
         // Draw verticals
         for x in stride(from: CGFloat(0), through: rect.size.width, by: incrementX) {
@@ -56,15 +56,17 @@ public class Canvas: UIView {
     
     func drawSimulation(in context: CGContext, with size: CGSize) {
         
+        context.setFillColor(UIColor.red.cgColor)
         for x in 0..<simulation.size.width {
             
             for y in 0..<simulation.size.height {
                 
-                let cell = simulation.cell(at:(x: x, y:y))
+                let cell = simulation.world[x, y]
                 
                 if cell.isAlive {
                 
                     let rect = CGRect(x: CGFloat(x) * size.width, y: CGFloat(y) * size.height, width: size.width, height: size.height)
+                    
                     context.fill(rect)
                 }
             }
