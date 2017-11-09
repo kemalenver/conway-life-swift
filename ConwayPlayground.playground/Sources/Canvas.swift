@@ -17,61 +17,58 @@ public class Canvas: UIView {
     @available(*, unavailable) public required init?(coder aDecoder: NSCoder) {
         fatalError("disabled init")
     }
-
     
-    override public func draw(_ rect: CGRect) {
-        super.draw(rect)
+    func drawSimulation(in context: CGContext, with size: CGSize) {
+        
+        context.setFillColor(UIColor.red.cgColor)
+        
+        for point in simulation.aliveCells {
+            
+            let rect = CGRect(x: CGFloat(point.x) * size.width, y: CGFloat(point.y) * size.height, width: size.width, height: size.height)
+            
+            context.fill(rect)
+        }
+    }
+    
+    public func display() {
+        let layer = self.layer
+        layer.setNeedsDisplay()
+        layer.displayIfNeeded()
+    }
+    
+    
+    override public func draw(_ layer: CALayer, in ctx: CGContext) {
+     
+        super.draw(layer, in: ctx)
+        
+        let rect = self.bounds
         
         let simulationSize = simulation.size
         
         let incrementX = rect.width / CGFloat(simulationSize.width)
         let incrementY = rect.width / CGFloat(simulationSize.height)
         
-        guard let context = UIGraphicsGetCurrentContext() else { return }
+        drawSimulation(in: ctx, with: CGSize(width: incrementX, height: incrementY))
         
-        drawSimulation(in: context, with: CGSize(width: incrementX, height: incrementY))
-        
-        context.setLineWidth(1.0)
-        context.setStrokeColor(UIColor.darkGray.cgColor)
+        ctx.setLineWidth(1)
+        ctx.setStrokeColor(UIColor.darkGray.cgColor)
         
         // Draw verticals
         for x in stride(from: CGFloat(0), through: rect.size.width, by: incrementX) {
-        
-            context.move(to: CGPoint(x: x, y: 0))
-            context.addLine(to: CGPoint(x: x, y: rect.height))
-            context.strokePath()
+            
+            ctx.move(to: CGPoint(x: x, y: 0))
+            ctx.addLine(to: CGPoint(x: x, y: rect.height))
+            ctx.strokePath()
             
         }
         
         // Draw horizontals
         for y in stride(from: CGFloat(0), through: rect.size.height, by: incrementY) {
             
-            context.move(to: CGPoint(x: 0, y: y))
-            context.addLine(to: CGPoint(x: rect.width, y: y))
-            context.strokePath()
+            ctx.move(to: CGPoint(x: 0, y: y))
+            ctx.addLine(to: CGPoint(x: rect.width, y: y))
+            ctx.strokePath()
             
         }
-        
-    }
-    
-    func drawSimulation(in context: CGContext, with size: CGSize) {
-        
-        context.setFillColor(UIColor.red.cgColor)
-        for x in 0..<simulation.size.width {
-            
-            for y in 0..<simulation.size.height {
-                
-                let cell = simulation.world[x, y]
-                
-                if cell.isAlive {
-                
-                    let rect = CGRect(x: CGFloat(x) * size.width, y: CGFloat(y) * size.height, width: size.width, height: size.height)
-                    
-                    context.fill(rect)
-                }
-            }
-        }
-        
-        
     }
 }

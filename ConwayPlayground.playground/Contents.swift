@@ -6,7 +6,7 @@ import PlaygroundSupport
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 
-let simulationSize = (width: 200, height: 200)
+let simulationSize = (width: 50, height: 50)
 
 let simulation = Simulation(with: simulationSize)
 
@@ -14,13 +14,10 @@ var containerView = Canvas(frame: CGRect(x: 0, y: 0, width: 800, height: 800), s
 
 PlaygroundPage.current.liveView = containerView
 
-let timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { timer in
+let timer = Timer.scheduledTimer(withTimeInterval: 0.0, repeats: true) { timer in
 
-    DispatchQueue.main.async {
-
-        simulation.tick()
-        containerView.setNeedsDisplay()
-    }
-
+    simulation.tick()
+    
+    containerView.display()
 }
 

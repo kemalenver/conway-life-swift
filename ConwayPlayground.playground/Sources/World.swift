@@ -48,7 +48,7 @@ public struct World{
 
             for y in 0..<worldSize.height {
 
-                world[x][y] = arc4random_uniform(100) < 15 ? Cell.alive : Cell.dead
+                world[x][y] = arc4random_uniform(100) < 10 ? Cell.alive : Cell.dead
             }
         }
     }
