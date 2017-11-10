@@ -25,14 +25,13 @@ public enum Cell: CustomStringConvertible {
 
 public struct World{
     
-    
     var world: [[Cell]]
-    var worldSize: (height: Int, width: Int)
+    var worldSize: Size<Int>
     
-    public init(_ dimensions: (width: Int, height: Int)) {
+    public init(_ size: Size<Int>) {
         
-        self.worldSize = dimensions
-        self.world = Array(repeating: Array(repeating: Cell.dead, count: dimensions.height), count: dimensions.width)
+        self.worldSize = size
+        self.world = Array(repeating: Array(repeating: Cell.dead, count: size.height), count: size.width)
     }
     
     public mutating func seed() {
@@ -76,58 +75,41 @@ public struct World{
         
         //        world[3][5] = Cell.alive
         //        world[5][5] = Cell.alive
-        
-        
     }
-    
+
+    func correctedPoint(_ x: Int, _ y: Int) -> Point {
+        var x = x
+        var y = y
+
+        if x < 0 {
+            x = x + worldSize.width
+        } else if x > worldSize.width-1 {
+            x = x - worldSize.width
+        }
+
+        if y < 0 {
+            y = y + worldSize.height
+        } else if y > worldSize.height-1 {
+            y = y - worldSize.height
+        }
+
+        return Point(x, y)
+    }
+
     subscript(x: Int, y: Int) -> Cell {
         
         get {
             
-            var x = x
-            var y = y
+            let correctedPoint = self.correctedPoint(x, y)
             
-            if x < 0 {
-                x = x + worldSize.width
-            }
-            
-            if x > worldSize.width-1 {
-                x = x - worldSize.width
-            }
-            
-            if y < 0 {
-                
-                y = y + worldSize.height
-            }
-            
-            if y > worldSize.height-1 {
-                y = y - worldSize.height
-            }
-            
-            return world[x][y]
+            return world[correctedPoint.x][correctedPoint.y]
         }
+
         set {
-            var x = x
-            var y = y
+
+            let correctedPoint = self.correctedPoint(x, y)
             
-            if x < 0 {
-                x = x + worldSize.width
-            }
-            
-            if x > worldSize.width-1 {
-                x = x - worldSize.width
-            }
-            
-            if y < 0 {
-                
-                y = y + worldSize.height
-            }
-            
-            if y > worldSize.height-1 {
-                y = y - worldSize.height
-            }
-            
-            world[x][y] = newValue
+            world[correctedPoint.x][correctedPoint.y] = newValue
         }
     }
 }

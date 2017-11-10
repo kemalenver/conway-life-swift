@@ -36,7 +36,6 @@ public class Canvas: UIView {
         layer.displayIfNeeded()
     }
     
-    
     override public func draw(_ layer: CALayer, in ctx: CGContext) {
      
         super.draw(layer, in: ctx)
@@ -49,26 +48,26 @@ public class Canvas: UIView {
         let incrementY = rect.width / CGFloat(simulationSize.height)
         
         drawSimulation(in: ctx, with: CGSize(width: incrementX, height: incrementY))
-        
+
+        if incrementX < 2 || incrementY < 2 {
+            return
+        }
+
         ctx.setLineWidth(1)
         ctx.setStrokeColor(UIColor.darkGray.cgColor)
-        
-        // Draw verticals
+
         for x in stride(from: CGFloat(0), through: rect.size.width, by: incrementX) {
             
             ctx.move(to: CGPoint(x: x, y: 0))
             ctx.addLine(to: CGPoint(x: x, y: rect.height))
             ctx.strokePath()
-            
         }
-        
-        // Draw horizontals
+
         for y in stride(from: CGFloat(0), through: rect.size.height, by: incrementY) {
             
             ctx.move(to: CGPoint(x: 0, y: y))
             ctx.addLine(to: CGPoint(x: rect.width, y: y))
             ctx.strokePath()
-            
         }
     }
 }

@@ -4,11 +4,11 @@ import UIKit
 public class Simulation {
     
     var world: World
-    var aliveCells = [(x: Int, y: Int)]()
+    var aliveCells = Set<Point>()
     
-    public var size: (width: Int, height: Int)
+    public var size: Size<Int>
     
-    public init(with size: (width: Int, height: Int)) {
+    public init(with size: Size<Int>) {
         
         self.size = size
         self.world = World(size)
@@ -16,9 +16,7 @@ public class Simulation {
     }
     
     public func tick() {
-        
-        let tempAliveCells = aliveCells
-        
+
         aliveCells.removeAll()
         
         var tempWorld = World(self.size)
@@ -27,11 +25,11 @@ public class Simulation {
 
             for y in 0..<size.height {
 
-                let n = self.numberOfAliveCells(around: (x: x, y: y))
+                let n = self.numberOfAliveCells(around: Point(x,y))
 
                 if (n == 3) || (n == 2 && world[x, y].isAlive) {
                     tempWorld[x, y] = Cell.alive
-                    aliveCells.append( (x:x, y:y) )
+                    aliveCells.insert( Point(x,y) )
                 } else {
                     tempWorld[x, y] = Cell.dead
                 }
@@ -42,13 +40,13 @@ public class Simulation {
     }
     
     
-    public func numberOfAliveCells(around index: (x: Int, y: Int)) -> Int {
+    public func numberOfAliveCells(around point: Point) -> Int {
         
         var n = 0;
         
-        for x1 in (index.x-1)...(index.x+1) {
+        for x1 in (point.x-1)...(point.x+1) {
             
-            for y1 in (index.y-1)...(index.y+1) {
+            for y1 in (point.y-1)...(point.y+1) {
                 
                 if world[x1, y1].isAlive {
                     n += 1
@@ -56,7 +54,7 @@ public class Simulation {
             }
         }
         
-        if world[index.x, index.y].isAlive {
+        if world[point.x, point.y].isAlive {
             n -= 1
         }
         

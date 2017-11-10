@@ -6,7 +6,7 @@ import PlaygroundSupport
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 
-let simulationSize = (width: 50, height: 50)
+let simulationSize = Size(50, 50)
 
 let simulation = Simulation(with: simulationSize)
 
